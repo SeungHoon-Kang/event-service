@@ -2,45 +2,53 @@ import {
   Controller,
   Post,
   Get,
-  Put,
-  Delete,
   Body,
   Param,
-  UseGuards,
+  Req,
+  BadRequestException,
 } from '@nestjs/common';
-import { EventService } from './reward.service';
-import { CreateEventDto } from './dto/create-event.dto';
+import { RewardService } from './reward.service';
+import { CreateRewardDto } from './dto/create-reward.dto';
+import { Request } from 'express';
 
-@Controller('event')
-export class EventController {
-  constructor(private readonly eventService: EventService) {}
+@Controller('api/v1/reward')
+export class RewardController {
+  constructor(private readonly rewardService: RewardService) {}
 
-  @Post('register')
-  async createEvent(@Body() createEventDto: CreateEventDto) {
-    return this.eventService.create(createEventDto);
+  // 보상 등록 (create)
+  @Post('/create')
+  async createReward(@Body() createRewardDto: CreateRewardDto) {
+    return this.rewardService.createReward(createRewardDto);
   }
 
-  @Get('list')
-  async getAllEvents() {
-    return this.eventService.findAll();
+  // 보상 목록 조회 (list)
+  @Get('/list')
+  async getAllRewards() {
+    return this.rewardService.findRewardAll();
   }
 
-  @Get(':id')
-  async getEventById(@Param('id') id: string) {
-    return this.eventService.findOne(id);
+  // 보상 목록 조회 (list)
+  @Get('/hist')
+  async getRewardHist() {
+    return this.rewardService.findHistory();
   }
 
-  @Put(':id')
-  async updateEvent(
-    @Param('id') id: string,
-    @Body() updateEventDto: CreateEventDto,
-  ) {
-    return this.eventService.update(id, updateEventDto);
+  // 보상 요청
+  @Post('/request')
+  async requestReward(@Req() req: Request) {
+    const userId = req.headers['x-user-id'];
+    if (!userId || Array.isArray(userId)) {
+      throw new BadRequestException('User ID not provided');
+    }
+
+    const result = await this.rewardService.checkAutoReward(userId);
+    return result;
   }
 
-  @Delete(':id')
+  // 이벤트 삭제 (delete)
+  @Post('/delete/:id')
   async deleteEvent(@Param('id') id: string) {
-    await this.eventService.remove(id);
-    return { message: 'Event deleted successfully' };
+    await this.rewardService.remove(id);
+    return { message: 'reward deleted successfully' };
   }
 }

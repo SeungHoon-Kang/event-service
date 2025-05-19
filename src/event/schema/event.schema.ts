@@ -1,13 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import type { HydratedDocument } from 'mongoose';
 
-type SchemaOptions = {
-  timestamps?: boolean;
-};
-
 export type EventDocument = HydratedDocument<Event>;
 
-@Schema({ timestamps: true } as SchemaOptions)
+@Schema({ timestamps: true })
 export class Event {
   @Prop({ required: true })
   title: string;
@@ -21,8 +17,16 @@ export class Event {
   @Prop({ required: true })
   endDate: Date;
 
-  @Prop({ default: [] })
-  rewards: string[]; // Reward ID 리스트
+  @Prop({
+    type: [
+      {
+        rewardCondition: { type: String, required: true },
+        rewardId: { type: String, required: true },
+      },
+    ],
+    default: [],
+  })
+  rewards: { rewardCondition: string; rewardId: string; title: string }[];
 
   @Prop({ default: true })
   isActive: boolean;

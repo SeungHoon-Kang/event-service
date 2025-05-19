@@ -14,6 +14,12 @@ export class CreateEventDto {
   @IsDate()
   endDate: Date;
 
+  @IsString()
+  rewardCondition: string;
+
+  @IsString()
+  rewardId: string;
+
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;

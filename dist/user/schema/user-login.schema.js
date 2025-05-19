@@ -9,27 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppController = void 0;
-const common_1 = require("@nestjs/common");
-const app_service_1 = require("./app.service");
-let AppController = class AppController {
-    appService;
-    constructor(appService) {
-        this.appService = appService;
-    }
-    getHello() {
-        return this.appService.getHello();
-    }
+exports.UserLoginSchema = exports.UserLogin = void 0;
+const mongoose_1 = require("@nestjs/mongoose");
+const mongoose_2 = require("mongoose");
+let UserLogin = class UserLogin extends mongoose_2.Document {
+    userId;
+    loginAt;
 };
-exports.AppController = AppController;
+exports.UserLogin = UserLogin;
 __decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String)
-], AppController.prototype, "getHello", null);
-exports.AppController = AppController = __decorate([
-    (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [app_service_1.AppService])
-], AppController);
-//# sourceMappingURL=app.controller.js.map
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], UserLogin.prototype, "userId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", Date)
+], UserLogin.prototype, "loginAt", void 0);
+exports.UserLogin = UserLogin = __decorate([
+    (0, mongoose_1.Schema)({ collection: 'user_logins' })
+], UserLogin);
+exports.UserLoginSchema = mongoose_1.SchemaFactory.createForClass(UserLogin);
+//# sourceMappingURL=user-login.schema.js.map

@@ -11,26 +11,26 @@ import {
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 
-@Controller('event')
+@Controller('/api/v1/event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
-  @Post('register')
+  @Post('/register')
   async createEvent(@Body() createEventDto: CreateEventDto) {
     return this.eventService.create(createEventDto);
   }
 
-  @Get('list')
+  @Get('/list')
   async getAllEvents() {
     return this.eventService.findAll();
   }
 
-  @Get(':id')
+  @Get('/:id')
   async getEventById(@Param('id') id: string) {
     return this.eventService.findOne(id);
   }
 
-  @Put(':id')
+  @Put('/update/:id')
   async updateEvent(
     @Param('id') id: string,
     @Body() updateEventDto: CreateEventDto,
@@ -38,7 +38,7 @@ export class EventController {
     return this.eventService.update(id, updateEventDto);
   }
 
-  @Delete(':id')
+  @Delete('/delete/:id')
   async deleteEvent(@Param('id') id: string) {
     await this.eventService.remove(id);
     return { message: 'Event deleted successfully' };

@@ -1,98 +1,119 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Event Reward Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+이벤트 보상 시스템 서비스입니다. 사용자의 활동에 따른 보상을 자동으로 지급하고 관리하는 시스템입니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 주요 기능
 
-## Description
+### 1. 이벤트 관리
+- 이벤트 생성, 조회, 수정, 삭제
+- 이벤트별 보상 조건 및 보상 설정
+- 활성/비활성 이벤트 관리
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 2. 보상 관리
+- 보상 생성 및 조회
+- 보상 지급 이력 관리
+- 보상 조건 충족 여부 자동 체크
 
-## Project setup
+### 3. 보상 조건
+- 연속 로그인 (CONSECUTIVE_LOGIN_3_DAYS)
+- 누적 로그인 (CUMULATIVE_LOGIN_7_DAYS)
+- 특정일 로그인 (SPECIFIC_DATE_LOGIN)
+- 복귀 유저 (RETURNING_USER)
+- 신규 유저 (NEW_USER)
 
-```bash
-$ yarn install
+### 4. 사용자 보상
+- 자동 보상 지급
+- 보상 지급 이력 조회
+- 중복 지급 방지
+
+## 기술 스택
+
+- NestJS
+- MongoDB (Mongoose)
+- TypeScript
+
+## 데이터 모델
+
+### Event
+```typescript
+{
+  title: string;
+  description?: string;
+  startDate: Date;
+  endDate: Date;
+  rewards: {
+    rewardCondition: string;
+    rewardId: string;
+    title: string;
+  }[];
+  isActive: boolean;
+}
 ```
 
-## Compile and run the project
-
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+### Reward
+```typescript
+{
+  name: string;
+  description?: string;
+  points: number;
+  isActive: boolean;
+}
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+### EventUser
+```typescript
+{
+  userId: string;
+  eventId: string;
+  rewardedAt: Date;
+}
 ```
 
-## Deployment
+## API 엔드포인트
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### 이벤트 API
+- `POST /api/v1/event/create` - 이벤트 생성
+- `GET /api/v1/event/list` - 이벤트 목록 조회
+- `GET /api/v1/event/show/:id` - 이벤트 상세 조회
+- `POST /api/v1/event/update/:id` - 이벤트 수정
+- `POST /api/v1/event/delete/:id` - 이벤트 삭제
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 보상 API
+- `POST /api/v1/reward/create` - 보상 생성
+- `GET /api/v1/reward/list` - 보상 목록 조회
+- `GET /api/v1/reward/hist` - 보상 지급 이력 조회
+- `POST /api/v1/reward/request` - 보상 요청
 
+## 설치 및 실행
+
+1. 의존성 설치
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+yarn
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+2. 환경 변수 설정
+```bash
+MONGO_URI=mongodb://localhost:27017/event-reward
+```
 
-## Resources
+3. 서버 실행
+```bash
+yarn start:dev
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+## 보상 조건 상세
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 연속 로그인 (CONSECUTIVE_LOGIN_3_DAYS)
+- 최근 3일간 연속으로 로그인한 경우
 
-## Support
+### 누적 로그인 (CUMULATIVE_LOGIN_7_DAYS)
+- 최근 7일간 총 7일 이상 로그인한 경우
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 특정일 로그인 (SPECIFIC_DATE_LOGIN)
+- 지정된 특정 날짜에 로그인한 경우
 
-## Stay in touch
+### 복귀 유저 (RETURNING_USER)
+- 마지막 로그인으로부터 1년 이상 지난 경우
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 신규 유저 (NEW_USER)
+- 회원가입 후 30일 이내인 경우

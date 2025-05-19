@@ -1,14 +1,15 @@
-import { IsString, IsDate, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsNumber } from 'class-validator';
 
-export class CreateRewardtDto {
+export class CreateRewardDto {
   @IsString()
-  title: string;
+  name: string;
 
   @IsString()
   @IsOptional()
   description?: string;
 
-  reward: string;
+  @IsNumber()
+  point: number; // 예: 포인트 보상량
 
   @IsBoolean()
   @IsOptional()

@@ -1,18 +1,26 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Event, EventSchema } from './schemas/event.schema';
-import { Reward, RewardSchema } from './schemas/reward.schema';
-import { EventService } from './reward.service';
-import { EventController } from './reward.controller';
-import { RewardService } from './reward.service';
 import { RewardController } from './reward.controller';
+import { RewardService } from './reward.service';
+import { Event, EventSchema } from '../event/schema/event.schema';
+
+import { User, UserSchema } from '../user/schema/user.schema';
+import { UserLogin, UserLoginSchema } from '../user/schema/user-login.schema';
+import { Reward, RewardSchema } from './schema/reward.schema';
+import { EventUser, EventUserSchema } from './schema/event-user.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
-    MongooseModule.forFeature([{ name: Reward.name, schema: RewardSchema }]),
+    MongooseModule.forFeature([
+      { name: Event.name, schema: EventSchema },
+      { name: Reward.name, schema: RewardSchema },
+      { name: User.name, schema: UserSchema },
+      { name: UserLogin.name, schema: UserLoginSchema },
+      { name: EventUser.name, schema: EventUserSchema },
+    ]),
   ],
-  controllers: [EventController, RewardController],
-  providers: [EventService, RewardService],
+  controllers: [RewardController],
+  providers: [RewardService],
+  exports: [RewardService],
 })
-export class EventModule {}
+export class RewardModule {}

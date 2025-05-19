@@ -6,21 +6,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.EventModule = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
-const event_module_1 = require("./event/event.module");
-const reward_module_1 = require("./reward/reward.module");
-let AppModule = class AppModule {
+const event_schema_1 = require("./schema/event.schema");
+const event_service_1 = require("./event.service");
+const event_controller_1 = require("./event.controller");
+let EventModule = class EventModule {
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
+exports.EventModule = EventModule;
+exports.EventModule = EventModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost:27017/event-reward'),
-            event_module_1.EventModule,
-            reward_module_1.RewardModule,
+            mongoose_1.MongooseModule.forFeature([{ name: event_schema_1.Event.name, schema: event_schema_1.EventSchema }]),
         ],
+        controllers: [event_controller_1.EventController],
+        providers: [event_service_1.EventService],
     })
-], AppModule);
-//# sourceMappingURL=app.module.js.map
+], EventModule);
+//# sourceMappingURL=event.module.js.map

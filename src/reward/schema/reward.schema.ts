@@ -12,10 +12,7 @@ export class Reward {
   description?: string;
 
   @Prop({ required: true })
-  eventId: string;
-
-  @Prop({ required: true })
-  points: number; // 예: 포인트 보상
+  points: number;
 
   @Prop({ default: true })
   isActive: boolean;
